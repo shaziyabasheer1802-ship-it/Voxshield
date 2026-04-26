@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+*.h5
+*.npz
+data/real/
+data/fake/
+results/*.png
+.DS_Store
+*.egg-info/
+dist/
+build/
