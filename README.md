@@ -1,33 +1,23 @@
-# VoiceShield
+🛡️ VoiceShield — AI Voice Fraud Detection & Complaint System
 
-This project extends [VoxGuard](https://github.com/ramlasyaa/VoxGuard) by ramlasyaa, with fixes for class imbalance during training and an added complaint-escalation module for handling detected voice fraud.
+Detecting AI-generated fake voices in real time, and turning detections into actionable, trackable complaints against impersonators.
 
----
-# 🎙️ VoxGuard — Audio Deepfake Detection
+Python TensorFlow Librosa
 
-> Detecting AI-generated fake voices using CNN-LSTM and spectrogram analysis.
+📌 What is VoiceShield?
 
-[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.12+-FF6F00?style=flat-square&logo=tensorflow&logoColor=white)](https://tensorflow.org)
-[![Librosa](https://img.shields.io/badge/Librosa-Audio_Processing-green?style=flat-square)](https://librosa.org)
+With the rise of AI voice cloning tools (ElevenLabs, VALL-E, etc.), it has become easy to generate fake audio that sounds exactly like a real person — enabling scam calls that impersonate banks, officials, and trusted contacts.
 
----
+VoiceShield is an end-to-end system that:
 
-## 📌 What is VoxGuard?
+Detects whether a voice recording is genuine or AI-generated, using a CNN-LSTM deep learning model
+Identifies which organization the caller claims to represent
+Generates and routes a complaint to a verified official channel when a call crosses a strict fake-probability threshold
+Tracks the complaint through to resolution
 
-With the rise of AI voice cloning tools (ElevenLabs, VALL-E, etc.), it has become easy to generate fake audio that sounds exactly like a real person. VoxGuard is a deep learning system that **detects whether a voice recording is genuine or AI-generated**.
+The detection engine is built on and extends VoxGuard by ramlasyaa — an open-source deepfake voice detector. VoiceShield fixes a class-imbalance issue found during training and adds the full complaint-escalation layer on top.
 
-It works by:
-1. **Extracting MFCC features** from the audio (a compact representation of the sound spectrum)
-2. **Passing them through a CNN** to detect local patterns in the sound
-3. **Passing through an LSTM** to analyse how those patterns change over time
-4. **Outputting a probability** — how likely the voice is fake
-
----
-
-## 🧠 Architecture
-
-```
+🧠 Detection Architecture
 Audio File (.wav / .flac)
         │
         ▼
@@ -49,146 +39,115 @@ Audio File (.wav / .flac)
         │
         ▼
   Output: probability of being FAKE
-  > 0.5 → FAKE  |  < 0.5 → REAL
-```
 
----
+On top of detection, VoiceShield adds:
 
-## 📁 Project Structure
-
-```
-VoxGuard/
-├── config.py            # All settings — change hyperparameters here
+Fake Probability
+        │
+        ▼
+  Escalation Threshold Check (0.97)
+        │
+        ▼
+  Claimed Organization Identification
+        │
+        ▼
+  Complaint Generation
+        │
+        ▼
+  Routing → Verified Official Channel
+        │
+        ▼
+  Complaint Tracking (status, updates)
+📁 Project Structure
+VoiceShield/
+├── config.py            # All settings — hyperparameters, thresholds
 ├── extract_features.py  # Step 1: Extract MFCC features from audio files
-├── model.py             # CNN-LSTM model definition
-├── train.py             # Step 2: Train the model
-├── evaluate.py          # Step 3: Print metrics + confusion matrix
-├── predict.py           # Step 4: Check any audio file
+├── model.py              # CNN-LSTM model definition
+├── train.py               # Step 2: Train the detection model
+├── evaluate.py           # Step 3: Print metrics + confusion matrix
+├── predict.py             # Step 4: Check any audio file
 ├── requirements.txt
 ├── data/
-│   ├── real/            # Put genuine voice files here (.wav / .flac)
-│   ├── fake/            # Put AI-spoofed voice files here
-│   └── README.md        # Dataset download instructions
+│   ├── real/               # Genuine voice files (.wav / .flac)
+│   ├── fake/               # AI-spoofed voice files
+│   └── README.md         # Dataset download instructions
 └── results/
     ├── training_curves.png
     └── confusion_matrix.png
-```
-
----
-
-## 🚀 Getting Started
-
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/ramlasyaa/VoxGuard.git
-cd VoxGuard
-```
-
-### 2. Set up environment
-
-```bash
+🚀 Getting Started
+1. Clone the repo
+bash
+git clone https://github.com/YOUR_USERNAME/VoiceShield.git
+cd VoiceShield
+2. Set up environment
+bash
 python3 -m venv venv
 source venv/bin/activate        # macOS/Linux
 # venv\Scripts\activate         # Windows
 
 pip install -r requirements.txt
-```
+3. Add your dataset
 
-### 3. Add your dataset
+See data/README.md for instructions. Recommended: ASVspoof 2019 LA partition.
 
-See [`data/README.md`](data/README.md) for instructions.  
-Recommended: **ASVspoof 2019 LA** partition.
-
-```
 data/
-├── real/   ← copy genuine .wav files here
-└── fake/   ← copy spoofed .wav files here
-```
-
-### 4. Extract features
-
-```bash
+├── real/   ← genuine .wav files
+└── fake/   ← spoofed .wav files
+4. Extract features
+bash
 python extract_features.py
-```
-
-### 5. Train the model
-
-```bash
+5. Train the model
+bash
 python train.py
-```
-
-### 6. Evaluate
-
-```bash
+6. Evaluate
+bash
 python evaluate.py
-```
-
-### 7. Predict any audio file
-
-```bash
+7. Predict any audio file
+bash
 python predict.py path/to/voice.wav
-# or an entire folder
-python predict.py path/to/audio_folder/
-```
+📊 Results
 
----
+Evaluated on the held-out test split of ASVspoof 2019 LA:
 
-## 📊 Results
+Metric	Score
+Overall Accuracy	97.24%
+Real — Precision	0.86
+Real — Recall	0.88
+Real — F1-score	0.87
+Fake — Precision	0.99
+Fake — Recall	0.98
+Fake — F1-score	0.98
+ROC-AUC	0.9888
 
-Results on the **ASVspoof 2019 LA** evaluation set:
+Engineering note: An earlier version of this model reported 89.83% "accuracy" — but a full per-class evaluation revealed it was simply predicting "Fake" for every sample, exploiting the dataset's natural 9:1 fake-to-real imbalance (ROC-AUC was only 0.57, near random). This was fixed using class-weighted training, which produced the genuine, balanced results above. This is documented as part of the project's development process.
 
-| Metric    | Score  |
-|-----------|--------|
-| Accuracy  | ~91%   |
-| Precision | ~89%   |
-| Recall    | ~93%   |
-| F1-Score  | ~91%   |
-| ROC-AUC   | ~0.96  |
+🛠️ Tech Stack
+Component	Tool / Library
+Language	Python 3.9+
+Deep Learning	TensorFlow / Keras
+Audio Processing	Librosa
+Features	MFCC (40 coefficients)
+ML Metrics	Scikit-learn
+Visualization	Matplotlib, Seaborn
+Cloud Training	Google Colab
+Dataset Source	Kaggle / ASVspoof 2019
+🔑 Key Concepts
+MFCC — Mel-Frequency Cepstral Coefficients. Compact audio features that capture how the human ear perceives sound.
+CNN — Detects local spatial patterns in the MFCC "image".
+LSTM — Captures how those patterns evolve over time (temporal context).
+Class Weighting — Corrects for imbalanced training data so the model doesn't just learn to predict the majority class.
+EarlyStopping — Prevents overfitting by stopping training when validation loss plateaus.
+🗺️ Roadmap
+ Detection model trained and validated on real data
+ Class imbalance identified and fixed
+ Live prediction verified on held-out samples
+ Backend API wrapping detection + complaint logic
+ Mobile app (Flutter) for recording/uploading calls
+ Firebase-backed complaint tracking dashboard
+🔗 References
+ASVspoof 2019 Dataset
+Original VoxGuard detector by ramlasyaa
+Librosa Documentation
+ASVspoof Challenge
 
-> *Results may vary depending on dataset size and split.*
-
----
-
-## 🛠️ Tech Stack
-
-| Component        | Tool / Library         |
-|------------------|------------------------|
-| Language         | Python 3.9+            |
-| Deep Learning    | TensorFlow / Keras     |
-| Audio Processing | Librosa                |
-| Features         | MFCC (40 coefficients) |
-| ML Metrics       | Scikit-learn           |
-| Visualization    | Matplotlib, Seaborn    |
-
----
-
-## 🔑 Key Concepts
-
-- **MFCC** — Mel-Frequency Cepstral Coefficients. Compact audio features that capture how the human ear perceives sound.
-- **CNN** — Detects local spatial patterns in the MFCC "image".
-- **LSTM** — Captures how those patterns evolve over time (temporal context).
-- **Binary Cross-Entropy** — Loss function for real/fake binary classification.
-- **EarlyStopping** — Prevents overfitting by stopping training when validation loss plateaus.
-
----
-
-## 📄 Related Research
-
-This project is based on our paper:
-
-> *"VoxGuard: Fake Audio (Deepfake Voice) Detection Using Spectrogram Analysis"*  
-> Ram Lasya et al. — **CONIT 2026 (IEEE)**
-
----
-
-## 🔗 References
-
-- [ASVspoof 2019 Dataset](https://datashare.ed.ac.uk/handle/10283/3336)
-- [WaveFake Dataset](https://github.com/RUB-SysSec/WaveFake)
-- [Librosa Documentation](https://librosa.org/doc/)
-- [ASVspoof Challenge](https://www.asvspoof.org/)
-
----
-
-*Built by [Ram Lasya](https://www.linkedin.com/in/ram-lasya-405035336) · Amrita Vishwa Vidyapeetham*
+VoiceShield extends the VoxGuard detection model with a complaint-escalation system for handling detected voice fraud.
