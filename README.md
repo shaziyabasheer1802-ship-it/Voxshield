@@ -1,3 +1,8 @@
+# VoiceShield
+
+This project extends [VoxGuard](https://github.com/ramlasyaa/VoxGuard) by ramlasyaa, with fixes for class imbalance during training and an added complaint-escalation module for handling detected voice fraud.
+
+---
 # 🎙️ VoxGuard — Audio Deepfake Detection
 
 > Detecting AI-generated fake voices using CNN-LSTM and spectrogram analysis.
