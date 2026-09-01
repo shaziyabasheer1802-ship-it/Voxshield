@@ -119,9 +119,11 @@ Fake — Recall	0.98
 Fake — F1-score	0.98
 ROC-AUC	0.9888
 
-Engineering note: An earlier version of this model reported 89.83% "accuracy" — but a full per-class evaluation revealed it was simply predicting "Fake" for every sample, exploiting the dataset's natural 9:1 fake-to-real imbalance (ROC-AUC was only 0.57, near random). This was fixed using class-weighted training, which produced the genuine, balanced results above. This is documented as part of the project's development process.
+Engineering note:
+An earlier version of this model reported 89.83% "accuracy" — but a full per-class evaluation revealed it was simply predicting "Fake" for every sample, exploiting the dataset's natural 9:1 fake-to-real imbalance (ROC-AUC was only 0.57, near random). This was fixed using class-weighted training, which produced the genuine, balanced results above. This is documented as part of the project's development process.
 
 🛠️ Tech Stack
+
 Component	Tool / Library
 Language	Python 3.9+
 Deep Learning	TensorFlow / Keras
@@ -131,20 +133,26 @@ ML Metrics	Scikit-learn
 Visualization	Matplotlib, Seaborn
 Cloud Training	Google Colab
 Dataset Source	Kaggle / ASVspoof 2019
+
 🔑 Key Concepts
+
 MFCC — Mel-Frequency Cepstral Coefficients. Compact audio features that capture how the human ear perceives sound.
 CNN — Detects local spatial patterns in the MFCC "image".
 LSTM — Captures how those patterns evolve over time (temporal context).
 Class Weighting — Corrects for imbalanced training data so the model doesn't just learn to predict the majority class.
 EarlyStopping — Prevents overfitting by stopping training when validation loss plateaus.
+
 🗺️ Roadmap
+
  Detection model trained and validated on real data
  Class imbalance identified and fixed
  Live prediction verified on held-out samples
  Backend API wrapping detection + complaint logic
  Mobile app (Flutter) for recording/uploading calls
  Firebase-backed complaint tracking dashboard
+ 
 🔗 References
+
 ASVspoof 2019 Dataset
 Original VoxGuard detector by ramlasyaa
 Librosa Documentation
