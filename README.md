@@ -1,4 +1,4 @@
-# 🛡️ VoiceShield — AI Voice Fraud Detection & Complaint System
+# 🛡️ voxshield — AI Voice Fraud Detection & Complaint System
 
 > Detecting AI-generated fake voices in real time, and turning detections into actionable, trackable complaints against impersonators.
 
@@ -8,17 +8,17 @@
 
 ---
 
-## 📌 What is VoiceShield?
+## 📌 What is voxshield?
 
 With the rise of AI voice cloning tools (ElevenLabs, VALL-E, etc.), it has become easy to generate fake audio that sounds exactly like a real person — enabling scam calls that impersonate banks, officials, and trusted contacts.
 
-**VoiceShield** is an end-to-end system that:
+**VoxShield** is an end-to-end system that:
 1. **Detects** whether a voice recording is genuine or AI-generated, using a CNN-LSTM deep learning model
 2. **Identifies** which organization the caller claims to represent
 3. **Generates and routes a complaint** to a verified official channel when a call crosses a strict fake-probability threshold
 4. **Tracks** the complaint through to resolution
 
-The detection engine is built on and extends **[VoxGuard](https://github.com/ramlasyaa/VoxGuard)** by ramlasyaa — an open-source deepfake voice detector. VoiceShield fixes a class-imbalance issue found during training and adds the full complaint-escalation layer on top.
+The detection engine is built on and extends **[VoxGuard](https://github.com/ramlasyaa/VoxGuard)** by ramlasyaa — an open-source deepfake voice detector. VoxShield fixes a class-imbalance issue found during training and adds the full complaint-escalation layer on top.
 
 ---
 
@@ -48,7 +48,7 @@ Audio File (.wav / .flac)
   Output: probability of being FAKE
 ```
 
-**On top of detection**, VoiceShield adds:
+**On top of detection**, VoxShield adds:
 
 ```
 Fake Probability
@@ -74,7 +74,7 @@ Fake Probability
 ## 📁 Project Structure
 
 ```
-VoiceShield/
+VoxShield/
 ├── config.py            # All settings — hyperparameters, thresholds
 ├── extract_features.py  # Step 1: Extract MFCC features from audio files
 ├── model.py              # CNN-LSTM model definition
@@ -98,8 +98,8 @@ VoiceShield/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/VoiceShield.git
-cd VoiceShield
+git clone https://github.com/YOUR_USERNAME/VoxShield.git
+cd VoxShield
 ```
 
 ### 2. Set up environment
